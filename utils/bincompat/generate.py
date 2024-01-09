@@ -241,7 +241,7 @@ def generate_run_kraft(config, plat):
             stream.write("    -W \\\n")
         elif not config["accel"]:
             stream.write("    -W \\\n")
-        if config["arch"]:
+        elif config["arch"] == "arm64":
             stream.write("    -W \\\n")
         stream.write(f"    --memory {config['memory']}M \\\n")
         stream.write("    --log-level debug --log-type basic \\\n")
