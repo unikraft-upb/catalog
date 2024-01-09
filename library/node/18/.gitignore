@@ -1,0 +1,9 @@
+/Makefile
+/Makefile.uk
+/scripts/
+/workdir/
+/kraft-node_*
+/node_*
+/initrd.cpio
+/rootfs.cpio
+/rootfs/
