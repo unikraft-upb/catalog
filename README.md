@@ -43,3 +43,4 @@ kraft pkg ls --apps --update
 | [![](https://github.com/unikraft/catalog/actions/workflows/library-node18.yaml/badge.svg)](https://github.com/unikraft/catalog/actions/workflows/library-node18.yaml) | [`unikraft.org/node:18`](library/node/18) |
 | [![](https://github.com/unikraft/catalog/actions/workflows/library-caddy2.7.yaml/badge.svg)](https://github.com/unikraft/catalog/actions/workflows/library-caddy2.7.yaml) | [`unikraft.org/caddy:2.7`](library/caddy/2.7) |
 | [![](https://github.com/unikraft/catalog/actions/workflows/library-findtime.yaml/badge.svg)](https://github.com/unikraft/catalog/actions/workflows/library-findtime.yaml) | [`unikraft.org/node:18`](library/findtime) |
+| [![](https://github.com/unikraft/catalog/actions/workflows/library-php8.2.yaml/badge.svg)](https://github.com/unikraft/catalog/actions/workflows/library-php8.2.yaml) | [`unikraft.org/php:8.2`](library/php/8.2) |
