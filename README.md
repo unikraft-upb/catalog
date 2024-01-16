@@ -45,3 +45,4 @@ kraft pkg ls --apps --update
 | [![](https://github.com/unikraft/catalog/actions/workflows/library-findtime.yaml/badge.svg)](https://github.com/unikraft/catalog/actions/workflows/library-findtime.yaml) | [`unikraft.org/node:18`](library/findtime) |
 | [![](https://github.com/unikraft/catalog/actions/workflows/library-php8.2.yaml/badge.svg)](https://github.com/unikraft/catalog/actions/workflows/library-php8.2.yaml) | [`unikraft.org/php:8.2`](library/php/8.2) |
 | [![](https://github.com/unikraft/catalog/actions/workflows/library-python3.12.yaml/badge.svg)](https://github.com/unikraft/catalog/actions/workflows/library-python3.12.yaml) | [`unikraft.org/python:3.12`](library/python/3.12) |
+| [![](https://github.com/unikraft/catalog/actions/workflows/library-ruby3.2.yaml/badge.svg)](https://github.com/unikraft/catalog/actions/workflows/library-ruby3.2.yaml) | [`unikraft.org/ruby:3.2`](library/ruby/3.2) |
