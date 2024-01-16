@@ -2,8 +2,7 @@
 
 sudo pkill -f kraft
 sudo pkill -f kraft-qemu
-
-test -d ./scripts/log || mkdir -p ./scripts/log
+sudo pkill -f qemu-system
 
 ./scripts/build/kraft-qemu-x86_64.sh > ./scripts/log/build-kraft-qemu-x86_64 2>&1
 if test $? -eq 0; then
@@ -15,7 +14,8 @@ fi
 
 sleep 5
 
-./scripts/run/kraft-qemu-x86_64-nofs.sh > ./scripts/log/run-kraft-qemu-x86_64-nofs 2>&1 &
+#./scripts/run/kraft-qemu-x86_64-nofs.sh > ./scripts/log/run-kraft-qemu-x86_64-nofs 2>&1 &
+./scripts/run/qemu-x86_64-nofs.sh .unikraft/build/*-x86_64 > run-qemu-x86_64-nofs.out 2>&1 &
 
 sleep 5
 
