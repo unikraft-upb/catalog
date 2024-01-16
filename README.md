@@ -47,3 +47,4 @@ kraft pkg ls --apps --update
 | [![](https://github.com/unikraft/catalog/actions/workflows/library-python3.12.yaml/badge.svg)](https://github.com/unikraft/catalog/actions/workflows/library-python3.12.yaml) | [`unikraft.org/python:3.12`](library/python/3.12) |
 | [![](https://github.com/unikraft/catalog/actions/workflows/library-ruby3.2.yaml/badge.svg)](https://github.com/unikraft/catalog/actions/workflows/library-ruby3.2.yaml) | [`unikraft.org/ruby:3.2`](library/ruby/3.2) |
 | [![](https://github.com/unikraft/catalog/actions/workflows/library-skipper0.18.yaml/badge.svg)](https://github.com/unikraft/catalog/actions/workflows/library-skipper0.18.yaml) | [`unikraft.org/skipper:0.18`](library/skipper/0.18) |
+| [![](https://github.com/unikraft/catalog/actions/workflows/library-perl5.38.yaml/badge.svg)](https://github.com/unikraft/catalog/actions/workflows/library-perl5.38.yaml) | [`unikraft.org/perl:5.38`](library/perl/5.38) |
