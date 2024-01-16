@@ -7,7 +7,7 @@ rootfs: ./rootfs
 cmd: ["/helloworld.lua"]
 
 unikraft:
-  version: stable
+  #version: stable
   kconfig:
     CONFIG_LIBRAMFS: 'y'
     CONFIG_LIBUK9P: 'y'
@@ -28,6 +28,6 @@ targets:
 libraries:
   musl: stable
   lua:
-    version: stable
+    #version: stable
     kconfig:
       CONFIG_LUA_MAIN_FUNCTION: 'y'

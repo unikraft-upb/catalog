@@ -7,7 +7,7 @@ rootfs: ./rootfs
 cmd: ["/redis.conf"]
 
 unikraft:
-  version: staging
+  #version: staging
   kconfig:
     CONFIG_LIBDEVFS_AUTOMOUNT: 'y'
     CONFIG_LIBDEVFS: 'y'
@@ -40,7 +40,7 @@ targets:
 libraries:
   musl: staging
   lwip:
-    version: staging
+    #version: staging
     kconfig:
       CONFIG_LWIP_UKNETDEV: 'y'
       CONFIG_LWIP_TCP: 'y'
@@ -53,7 +53,7 @@ libraries:
       CONFIG_LWIP_DHCP: 'y'
       CONFIG_LWIP_DNS: 'y'
   redis:
-    version: staging
+    #version: staging
     kconfig:
       CONFIG_LIBREDIS_SERVER: 'y'
       CONFIG_LIBREDIS_COMMON: 'y'

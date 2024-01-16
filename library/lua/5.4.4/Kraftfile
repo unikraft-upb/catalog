@@ -7,12 +7,12 @@ rootfs: ./Dockerfile
 cmd: ["/usr/bin/lua", "/src/server.lua"]
 
 template:
-  source: https://github.com/unikraft/app-elfloader.git
-  version: staging
+  source: ./workdir/app-elfloader.git
+  #version: staging
 
 unikraft:
-  source: https://github.com/unikraft/unikraft.git
-  version: staging
+  source: ./workdir/unikraft.git
+  #version: staging
   kconfig:
     # Configurations options for app-elfloader
     # (they can't be part of the template atm)
@@ -99,6 +99,7 @@ unikraft:
     CONFIG_STACK_SIZE_PAGE_ORDER: 4 # 128 * 4K = 512K
     CONFIG_UKPLAT_KSP_SIZE: 32768
     CONFIG_UKPLAT_MEMREGION_MAX_COUNT: 64
+    CONFIG_LIBUKNETDEV_EINFO_LIBPARAM: 'y'
 
     # Debug options
     # CONFIG_LIBUKDEBUG_PRINTD: 'y'
@@ -108,8 +109,8 @@ unikraft:
 
 libraries:
   lwip:
-    source: https://github.com/unikraft/lib-lwip.git
-    version: staging
+    source: ./workdir/lib-lwip.git
+    #version: staging
     kconfig:
       CONFIG_LWIP_LOOPIF: 'y'
       CONFIG_LWIP_UKNETDEV: 'y'
@@ -130,8 +131,8 @@ libraries:
       CONFIG_LWIP_NUM_TCPLISTENERS: 64
       CONFIG_LWIP_ICMP: 'y'
   libelf:
-    source: https://github.com/unikraft/lib-libelf.git
-    version: staging
+    source: ./workdir/lib-libelf.git
+    #version: staging
 
 targets:
 - fc/x86_64
