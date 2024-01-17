@@ -4,11 +4,11 @@ name: caddy
 
 rootfs: ./Dockerfile
 
+cmd: ["/usr/bin/caddy", "run", "--config", "/etc/caddy/Caddyfile"]
+
 template:
   source: ./workdir/app-elfloader.git
   #version: staging
-
-cmd: ["/usr/bin/caddy", "run", "--config", "/etc/caddy/Caddyfile"]
 
 unikraft:
   source: ./workdir/unikraft.git
@@ -88,8 +88,14 @@ unikraft:
     CONFIG_LIBUKVMEM_DEMAND_PAGE_IN_SIZE: 12
     CONFIG_LIBUKVMEM_PAGEFAULT_HANDLER_PRIO: 4
     CONFIG_LIBUKVMEM: 'y'
-    CONFIG_LIBVFSCORE_AUTOMOUNT_ROOTFS: 'y'
-    CONFIG_LIBVFSCORE_FSTAB: 'y'
+    CONFIG_LIBVFSCORE_AUTOMOUNT_CI_EINITRD: 'y'
+    CONFIG_LIBVFSCORE_AUTOMOUNT_CI: 'y'
+    CONFIG_LIBVFSCORE_AUTOMOUNT_FB: 'y'
+    CONFIG_LIBVFSCORE_AUTOMOUNT_FB0_DEV: "embedded"
+    CONFIG_LIBVFSCORE_AUTOMOUNT_FB0_DRIVER: "extract"
+    CONFIG_LIBVFSCORE_AUTOMOUNT_FB0_MP: "/"
+    CONFIG_LIBVFSCORE_AUTOMOUNT_UP: 'y'
+    CONFIG_LIBVFSCORE_AUTOMOUNT: 'y'
     CONFIG_LIBVFSCORE_NONLARGEFILE: 'y'
     CONFIG_LIBVFSCORE_ROOTFS_EINITRD: 'y'
     CONFIG_LIBVFSCORE: 'y'
@@ -125,8 +131,8 @@ libraries:
       CONFIG_LWIP_SOCKET: 'y'
       CONFIG_LWIP_AUTOIFACE: 'y'
       CONFIG_LWIP_IPV4: 'y'
-      CONFIG_LWIP_DHCP: 'n'
-      CONFIG_LWIP_DNS: 'n'
+      CONFIG_LWIP_DHCP: 'y'
+      CONFIG_LWIP_DNS: 'y'
       CONFIG_LWIP_NUM_TCPCON: 64
       CONFIG_LWIP_NUM_TCPLISTENERS: 64
       CONFIG_LWIP_ICMP: 'y'
