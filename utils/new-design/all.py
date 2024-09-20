@@ -474,7 +474,7 @@ class AppConfig:
         return self.is_kernel()
 
     def is_kernel(self):
-        return bool(self.config['unikraft'])
+        return self.config['unikraft'] != None
 
     def is_example(self):
         return not self.is_runtime()
@@ -521,12 +521,13 @@ class AppConfig:
         with open(app_config_file, "r", encoding="utf-8") as stream:
             data = yaml.safe_load(stream)
 
-        self.config["unikraft"] = {}
+        self.einitrd = False
+        self.config["unikraft"] = None
         if "unikraft" in data.keys():
+            self.config["unikraft"] = {}
             if isinstance(data["unikraft"], dict):
                 if "kconfig" in data["unikraft"].keys():
                     self.config["unikraft"]["kconfig"] = data["unikraft"]["kconfig"]
-                    self.einitrd = False
                     if "CONFIG_LIBVFSCORE_AUTOMOUNT_CI_EINITRD" in self.config["unikraft"]["kconfig"].keys() and \
                             self.config["unikraft"]["kconfig"]["CONFIG_LIBVFSCORE_AUTOMOUNT_CI_EINITRD"] == "y":
                         self.einitrd = True
@@ -923,7 +924,8 @@ class BuildConfig:
                     self._generate_build_make()
                 self._generate_run_kraftfile()
             else:
-                self._generate_fs()
+                if self.app_config.config["rootfs"]:
+                    self._generate_fs()
         elif self.config['build_tool'] == 'kraft':
             self._generate_kraftfile()
             self._generate_build_kraft()
