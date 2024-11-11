@@ -232,6 +232,11 @@ class TesterConfig:
                 comp_list = self._generate_compilers(plat, arch, sys_compilers)
                 if not comp_list:
                     continue
+                # Currently, Kraft can only build using GCC.
+                # So, irrespective of the available compilers, generate only
+                # one Kraft build target.
+                if b == 'kraft':
+                    comp_list = [{"type": "gcc", "path": "default"}]
                 for comp in comp_list:
                     _config = {}
                     _config['build'] = v['build'].copy()
@@ -538,9 +543,17 @@ class AppConfig:
         if not "template" in data.keys():
             self.config["template"] = None
         else:
-            self.config["template"] = self.data["template"].split("/")[-1]
-            if self.config["template"].endswith(".git"):
-                self.config["template"] = self.config["template"][:-4]
+            if isinstance(data["template"], dict):
+                if "source" in data["template"].keys():
+                    self.config["template"] = data["template"]["source"].split("/")[-1]
+                    if self.config["template"].endswith(".git"):
+                        self.config["template"] = self.config["template"][:-4]
+                else:
+                    self.config["template"] = None
+            else:
+                self.config["template"] = data["template"].split("/")[-1]
+                if self.config["template"].endswith(".git"):
+                    self.config["template"] = self.config["template"][:-4]
 
         if not "name" in data.keys():
             self.config["name"] = os.path.basename(os.getcwd())
@@ -845,7 +858,9 @@ class BuildConfig:
             raw_content = stream.read()
 
         target_dir = self.dir
-        (cross_compile, compiler) = self._get_compiler_vars()
+        #(cross_compile, compiler) = self._get_compiler_vars()
+        compiler = self.config['compiler']['path']
+        init_dir = os.getcwd()
 
         content = raw_content.format(**locals())
 
@@ -867,7 +882,9 @@ class BuildConfig:
         target_dir = self.dir
         rootfs = os.path.join(os.getcwd(), self.app_config.config["rootfs"])
         name = self.app_config.config["name"]
-        (cross_compile, compiler) = self._get_compiler_vars()
+        #(cross_compile, compiler) = self._get_compiler_vars()
+        compiler = self.config['compiler']['path']
+        init_dir = os.getcwd()
 
         content = raw_content.format(**locals())
 
@@ -885,6 +902,7 @@ class BuildConfig:
         target_dir = self.dir
         rootfs = os.path.join(os.getcwd(), self.app_config.config["rootfs"])
         name = self.app_config.config["name"]
+        init_dir = os.getcwd()
 
         content = raw_content.format(**locals())
 
@@ -905,7 +923,7 @@ class BuildConfig:
         target_dir = self.dir
         plat = self.config["platform"]
         arch = self.config["arch"]
-        (cross_compile, compiler) = self._get_compiler_vars()
+        #(cross_compile, compiler) = self._get_compiler_vars()
 
         content = raw_content.format(**locals())
 
