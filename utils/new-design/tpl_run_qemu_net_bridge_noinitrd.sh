@@ -35,7 +35,7 @@ sudo {vmm} \
     {machine} \
     -kernel "$kernel" \
     -nographic \
-    -m {memory} \
+    -m {memory}M \
     -netdev bridge,id=en0,br=virbr0 -device virtio-net-pci,netdev=en0 \
     -append "{name} netdev.ip=172.44.0.2/24:172.44.0.1::: -- $cmd" \
     -cpu max

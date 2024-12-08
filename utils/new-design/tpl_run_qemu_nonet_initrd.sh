@@ -24,7 +24,7 @@ rootfs={target_dir}/rootfs
     {machine} \
     -kernel "$kernel" \
     -nographic \
-    -m {memory} \
+    -m {memory}M \
     -append "{name} vfs.fstab=[ \"initrd0:/:extract::ramfs=1:\" ] -- $cmd" \
     -initrd {run_dir}/initrd.cpio \
     -cpu max

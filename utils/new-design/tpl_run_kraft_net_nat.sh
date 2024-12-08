@@ -14,7 +14,7 @@ kraft run \
   --log-level debug --log-type basic \
   --rm \
   {hypervisor_option} \
-  --memory {memory} \
+  --memory {memory}Mi \
   --port {port_ext}:{port_int} \
   --arch {arch} --plat {plat} \
   {target_dir}

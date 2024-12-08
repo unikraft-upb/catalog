@@ -20,6 +20,6 @@ kraft rm --all
     {machine} \
     -kernel "$kernel" \
     -nographic \
-    -m {memory} \
+    -m {memory}M \
     -append "{name} -- $cmd" \
     -cpu max

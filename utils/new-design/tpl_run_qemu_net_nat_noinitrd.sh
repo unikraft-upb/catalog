@@ -20,7 +20,7 @@ kraft rm --all
     {machine} \
     -kernel "$kernel" \
     -nographic \
-    -m {memory} \
+    -m {memory}M \
     -device virtio-net-pci,mac=02:b0:b0:1d:be:01,netdev=hostnet0 \
     -netdev user,id=hostnet0,hostfwd=tcp::{port_ext}-:{port_int} \
     -append "{name} -- $cmd" \

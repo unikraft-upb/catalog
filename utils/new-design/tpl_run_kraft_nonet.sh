@@ -14,6 +14,6 @@ kraft run \
   --log-level debug --log-type basic \
   --rm \
   {hypervisor_option} \
-  --memory {memory} \
+  --memory {memory}Mi \
   --arch {arch} --plat {plat} \
   {target_dir}

@@ -972,7 +972,7 @@ class RunConfig:
         target_dir = os.path.dirname(self.dir)
         plat = self.target_config["build"]["platform"]
         arch = self.target_config["build"]["arch"]
-        memory = f"{self.app_config.config['memory']}M"
+        memory = f"{self.app_config.config['memory']}"
         cmd = self.app_config.config["cmd"]
         kernel = self.build_config.kernel_path
         port_ext = self.app_config.config["public_port"]

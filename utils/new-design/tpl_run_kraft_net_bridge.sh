@@ -28,7 +28,7 @@ sudo \
       --log-level debug --log-type basic \
       --rm \
       {hypervisor_option} \
-      --memory {memory} \
+      --memory {memory}Mi \
       --network virbr0:172.44.0.2/24:172.44.0.1:::: \
       --arch {arch} --plat {plat} \
       {target_dir}
