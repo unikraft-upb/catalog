@@ -7,7 +7,7 @@ rootfs: ./Dockerfile
 cmd: ["/helloworld.py"]
 
 unikraft:
-  version: staging
+  source: /home/razvan/orgs/unikraft/catalog-test-apps/./library/python/3.10/repos/unikraft
   kconfig:
     CONFIG_LIBDEVFS_AUTOMOUNT: 'y'
     CONFIG_LIBDEVFS: 'y'
@@ -51,9 +51,10 @@ targets:
 - fc/x86_64
 
 libraries:
-  musl: staging
+  musl:
+    source: /home/razvan/orgs/unikraft/catalog-test-apps/./library/python/3.10/repos/libs/musl
   lwip:
-    version: staging
+    source: /home/razvan/orgs/unikraft/catalog-test-apps/./library/python/3.10/repos/libs/lwip
     kconfig:
       CONFIG_LWIP_UKNETDEV: 'y'
       CONFIG_LWIP_TCP: 'y'
@@ -65,11 +66,14 @@ libraries:
       CONFIG_LWIP_IPV4: 'y'
       CONFIG_LWIP_DHCP: 'y'
       CONFIG_LWIP_DNS: 'y'
-  zlib: staging
-  libuuid: staging
-  compiler-rt: staging
+  zlib:
+    source: /home/razvan/orgs/unikraft/catalog-test-apps/./library/python/3.10/repos/libs/zlib
+  libuuid:
+    source: /home/razvan/orgs/unikraft/catalog-test-apps/./library/python/3.10/repos/libs/libuuid
+  compiler-rt:
+    source: /home/razvan/orgs/unikraft/catalog-test-apps/./library/python/3.10/repos/libs/compiler-rt
   python3:
-    version: staging
+    source: /home/razvan/orgs/unikraft/catalog-test-apps/./library/python/3.10/repos/libs/python3
     kconfig:
       CONFIG_LIBPYTHON3: 'y'
       CONFIG_LIBPYTHON3_EXTENSIONS: 'y'

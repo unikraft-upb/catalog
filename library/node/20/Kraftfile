@@ -7,12 +7,10 @@ rootfs: ./Dockerfile
 cmd: ["/usr/bin/node", "/usr/src/server.js"]
 
 template:
-  source: https://github.com/unikraft/app-elfloader.git
-  version: staging
+  source: /home/razvan/orgs/unikraft/catalog-test-apps/./library/node/20/repos/apps/elfloader
 
 unikraft:
-  source: https://github.com/unikraft/unikraft.git
-  version: staging
+  source: /home/razvan/orgs/unikraft/catalog-test-apps/./library/node/20/repos/unikraft
   kconfig:
     # Configurations options for app-elfloader
     # (they can't be part of the template atm)
@@ -108,8 +106,7 @@ unikraft:
 
 libraries:
   lwip:
-    source: https://github.com/unikraft/lib-lwip.git
-    version: staging
+    source: /home/razvan/orgs/unikraft/catalog-test-apps/./library/node/20/repos/libs/lwip
     kconfig:
       CONFIG_LWIP_TCP: 'y'
       CONFIG_LWIP_UDP: 'y'
@@ -126,8 +123,7 @@ libraries:
       CONFIG_LWIP_DHCP: 'y'
       CONFIG_LWIP_DNS: 'n'
   libelf:
-    source: https://github.com/unikraft/lib-libelf.git
-    version: staging
+    source: /home/razvan/orgs/unikraft/catalog-test-apps/./library/node/20/repos/libs/libelf
 
 targets:
 - fc/x86_64

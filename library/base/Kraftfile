@@ -1,15 +1,14 @@
 spec: v0.6
 
 template:
-  source: https://github.com/unikraft/app-elfloader.git
-  version: staging
+  source: /home/razvan/orgs/unikraft/catalog-test-apps/./library/base/repos/apps/elfloader
 
 rootfs: ./Dockerfile
 
 cmd: ["/fallback"]
 
 unikraft:
-  version: staging
+  source: /home/razvan/orgs/unikraft/catalog-test-apps/./library/base/repos/unikraft
   kconfig:
     # Configurations options for app-elfloader
     # (they can't be part of the template atm)
@@ -121,8 +120,7 @@ unikraft:
 
 libraries:
   lwip:
-    source: https://github.com/unikraft/lib-lwip.git
-    version: staging
+    source: /home/razvan/orgs/unikraft/catalog-test-apps/./library/base/repos/libs/lwip
     kconfig:
       CONFIG_LWIP_LOOPIF: 'y'
       CONFIG_LWIP_UKNETDEV: 'y'
@@ -146,8 +144,7 @@ libraries:
       CONFIG_LWIP_NUM_TCPLISTENERS: 64
       CONFIG_LWIP_ICMP: 'y'
   libelf:
-    source: https://github.com/unikraft/lib-libelf.git
-    version: staging
+    source: /home/razvan/orgs/unikraft/catalog-test-apps/./library/base/repos/libs/libelf
 
 targets:
 - fc/x86_64

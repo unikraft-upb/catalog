@@ -2,7 +2,8 @@ spec: v0.6
 
 name: helloworld
 
-unikraft: stable
+unikraft:
+  source: /home/razvan/orgs/unikraft/catalog-test-apps/./native/helloworld-c/repos/unikraft
 
 targets:
 - fc/arm64

@@ -2,11 +2,14 @@ spec: v0.6
 
 name: helloworld
 
-unikraft: stable
+unikraft:
+  source: /home/razvan/orgs/unikraft/catalog-test-apps/./native/helloworld-rs/repos/unikraft
 
 libraries:
-  musl: stable
-  lwip: stable
+  musl:
+    source: /home/razvan/orgs/unikraft/catalog-test-apps/./native/helloworld-rs/repos/libs/musl
+  lwip:
+    source: /home/razvan/orgs/unikraft/catalog-test-apps/./native/helloworld-rs/repos/libs/lwip
 
 targets:
 - qemu/x86_64

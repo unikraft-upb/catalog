@@ -2,12 +2,14 @@ spec: v0.6
 
 name: http-rs
 
-unikraft: stable
+unikraft:
+  source: /home/razvan/orgs/unikraft/catalog-test-apps/./native/http-rs/repos/unikraft
 
 libraries:
-  musl: stable
+  musl:
+    source: /home/razvan/orgs/unikraft/catalog-test-apps/./native/http-rs/repos/libs/musl
   lwip:
-    version: stable
+    source: /home/razvan/orgs/unikraft/catalog-test-apps/./native/http-rs/repos/libs/lwip
     kconfig:
       CONFIG_LWIP_UKNETDEV: 'y'
       CONFIG_LWIP_TCP: 'y'

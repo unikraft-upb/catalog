@@ -7,7 +7,7 @@ rootfs: ./rootfs
 cmd: ["/music.db", ".read query.sql"]
 
 unikraft:
-  version: staging
+  source: /home/razvan/orgs/unikraft/catalog-test-apps/./library/sqlite/3.40/repos/unikraft
   kconfig:
     CONFIG_LIBRAMFS: 'y'
     CONFIG_LIBUK9P: 'y'
@@ -33,7 +33,8 @@ targets:
 - fc/arm64
 
 libraries:
-  musl: stable
+  musl:
+    source: /home/razvan/orgs/unikraft/catalog-test-apps/./library/sqlite/3.40/repos/libs/musl
   sqlite:
     version: stable
     kconfig:

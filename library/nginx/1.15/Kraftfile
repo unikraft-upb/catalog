@@ -13,7 +13,7 @@ cmd: ["-c", "/nginx/conf/nginx.conf"]
 # - ./rootfs/html:/nginx/html
 
 unikraft:
-  version: staging
+  source: /home/razvan/orgs/unikraft/catalog-test-apps/./library/nginx/1.15/repos/unikraft
   kconfig:
     CONFIG_LIBDEVFS_AUTOMOUNT: 'y'
     CONFIG_LIBDEVFS_DEV_NULL: 'y'
@@ -54,9 +54,10 @@ targets:
 - fc/arm64
 
 libraries:
-  musl: staging
+  musl:
+    source: /home/razvan/orgs/unikraft/catalog-test-apps/./library/nginx/1.15/repos/libs/musl
   lwip:
-    version: staging
+    source: /home/razvan/orgs/unikraft/catalog-test-apps/./library/nginx/1.15/repos/libs/lwip
     kconfig:
       CONFIG_LWIP_LOOPIF: 'y'
       CONFIG_LWIP_UKNETDEV: 'y'
@@ -77,6 +78,6 @@ libraries:
       CONFIG_LWIP_NUM_TCPLISTENERS: 64
       CONFIG_LWIP_ICMP: 'y'
   nginx:
-    version: staging
+    source: /home/razvan/orgs/unikraft/catalog-test-apps/./library/nginx/1.15/repos/libs/nginx
     kconfig:
       CONFIG_LIBNGINX_MAIN_FUNCTION: 'y'

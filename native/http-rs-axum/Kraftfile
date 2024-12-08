@@ -3,16 +3,17 @@ spec: v0.6
 name: http-rs-axum
 
 unikraft:
-  version: stable
+  source: /home/razvan/orgs/unikraft/catalog-test-apps/./native/http-rs-axum/repos/unikraft
   kconfig:
     CONFIG_LIBPOSIX_EVENTFD: 'y'
     CONFIG_LIBPOSIX_UNIXSOCKET: 'y'
     CONFIG_LIBUKNETDEV_EINFO_LIBPARAM: 'y'
 
 libraries:
-  musl: stable
+  musl:
+    source: /home/razvan/orgs/unikraft/catalog-test-apps/./native/http-rs-axum/repos/libs/musl
   lwip:
-    version: stable
+    source: /home/razvan/orgs/unikraft/catalog-test-apps/./native/http-rs-axum/repos/libs/lwip
     kconfig:
       CONFIG_LWIP_UKNETDEV: 'y'
       CONFIG_LWIP_TCP: 'y'

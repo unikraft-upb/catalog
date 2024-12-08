@@ -3,7 +3,7 @@ spec: v0.6
 name: http-c
 
 unikraft:
-  version: stable
+  source: /home/razvan/orgs/unikraft/catalog-test-apps/./native/http-c/repos/unikraft
   kconfig:
     CONFIG_LIBUKBUS: 'y'
     CONFIG_LIBPOSIX_FDIO: 'y'
@@ -17,7 +17,7 @@ targets:
 
 libraries:
   lwip:
-    version: stable
+    source: /home/razvan/orgs/unikraft/catalog-test-apps/./native/http-c/repos/libs/lwip
     kconfig:
       CONFIG_LWIP_UKNETDEV: 'y'
       CONFIG_LWIP_TCP: 'y'

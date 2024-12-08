@@ -3,7 +3,7 @@ spec: v0.6
 name: helloworld
 
 unikraft:
-  version: stable
+  source: /home/razvan/orgs/unikraft/catalog-test-apps/./native/helloworld-cpp/repos/unikraft
   kconfig:
     CONFIG_LIBPOSIX_SYSINFO: y
     CONFIG_LIBUKSIGNAL: y
@@ -15,11 +15,15 @@ targets:
 - fc/x86_64
 
 libraries:
-  libcxxabi: stable
-  libcxx: stable
-  libunwind: stable
+  libcxxabi:
+    source: /home/razvan/orgs/unikraft/catalog-test-apps/./native/helloworld-cpp/repos/libs/libcxxabi
+  libcxx:
+    source: /home/razvan/orgs/unikraft/catalog-test-apps/./native/helloworld-cpp/repos/libs/libcxx
+  libunwind:
+    source: /home/razvan/orgs/unikraft/catalog-test-apps/./native/helloworld-cpp/repos/libs/libunwind
   compiler-rt:
-    version: stable
+    source: /home/razvan/orgs/unikraft/catalog-test-apps/./native/helloworld-cpp/repos/libs/compiler-rt
     kconfig:
       CONFIG_LIBCOMPILER_RT: 'y'
-  musl: stable
+  musl:
+    source: /home/razvan/orgs/unikraft/catalog-test-apps/./native/helloworld-cpp/repos/libs/musl
