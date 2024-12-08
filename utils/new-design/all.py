@@ -493,6 +493,20 @@ class AppConfig:
     def has_rootfs(self):
         return self.config['rootfs']
 
+    def _get_targets_from_runtime(self):
+        kraft_proc = subprocess.Popen(["kraft", "pkg", "info", "--log-level", "panic", self.config["runtime"], "-o", "json"], stdout=subprocess.PIPE)
+        jq_proc = subprocess.Popen(["jq", "-r", ".[] | .plat"], stdin=subprocess.PIPE, stdout=subprocess.PIPE)
+        kraft_output,_ = kraft_proc.communicate()
+        jq_out,_ = jq_proc.communicate(kraft_output)
+
+        targets = []
+        for full_plat in jq_out.decode().split("\n"):
+            if full_plat:
+                plat = full_plat.split("/")[0]
+                arch = full_plat.split("/")[1]
+                targets.append((plat, arch))
+            self.config['targets'] = targets
+
     def _parse_user_config(self, user_config_file):
         with open(user_config_file, "r", encoding="utf-8") as stream:
             data = yaml.safe_load(stream)
@@ -567,6 +581,8 @@ class AppConfig:
 
         if not 'targets' in data.keys():
             self.config['targets'] = None
+            if self.is_example():
+                self._get_targets_from_runtime()
         else:
             targets = []
             for t in data['targets']:
@@ -657,6 +673,8 @@ class BuildConfig:
         self.app_config = app_config
         self.kernel_name = f"{self.app_config.config['name']}_{self.config['platform']}-{self.config['arch']}"
         self.kernel_path = os.path.join(os.path.join(os.path.join(self.dir, ".unikraft"), "build"), self.kernel_name)
+        if app_config.is_example():
+            self.kernel_path = os.path.join(os.path.join(os.path.join(self.dir, ".unikraft"), "bin"), "kernel")
 
     def get_build_tools(plat, arch):
         return ["make", "kraft"]
@@ -898,6 +916,10 @@ class BuildConfig:
         with open(os.path.join(SCRIPT_DIR, "tpl_build_fs.sh"), "r", encoding="utf-8") as stream:
             raw_content = stream.read()
 
+        if self.app_config.has_template():
+            app_dir = os.path.join(os.path.join(self.target_config["base"], "apps"), self.app_config.config['template'])
+        else:
+            app_dir = os.getcwd()
         base = self.target_config["base"]
         target_dir = self.dir
         rootfs = os.path.join(os.getcwd(), self.app_config.config["rootfs"])
