@@ -30,10 +30,6 @@ sudo ip link add dev virbr0 type bridge
 sudo ip address add 172.44.0.1/24 dev virbr0
 sudo ip link set dev virbr0 up
 
-rootfs={target_dir}/rootfs
-
-# Create CPIO archive to be used as the initrd.
-{base}/unikraft/support/scripts/mkcpio {run_dir}/initrd.cpio "$rootfs"
 sudo {vmm} \
     {hypervisor_option} \
     {machine} \
@@ -42,5 +38,5 @@ sudo {vmm} \
     -m {memory}M \
     -netdev bridge,id=en0,br=virbr0 -device virtio-net-pci,netdev=en0 \
     -append "{name} netdev.ip=172.44.0.2/24:172.44.0.1::: vfs.fstab=[ \"initrd0:/:extract::ramfs=1:\" ] -- $cmd" \
-    -initrd {run_dir}/initrd.cpio \
+    -initrd {app_dir}/initrd.cpio \
     -cpu max

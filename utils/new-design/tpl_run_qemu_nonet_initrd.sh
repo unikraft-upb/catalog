@@ -15,10 +15,6 @@ kraft stop --all
 kraft rm --all
 }} > /dev/null 2>&1
 
-rootfs={target_dir}/rootfs
-
-# Create CPIO archive to be used as the initrd.
-{base}/unikraft/support/scripts/mkcpio {run_dir}/initrd.cpio "$rootfs"
 {vmm} \
     {hypervisor_option} \
     {machine} \
@@ -26,5 +22,5 @@ rootfs={target_dir}/rootfs
     -nographic \
     -m {memory}M \
     -append "{name} vfs.fstab=[ \"initrd0:/:extract::ramfs=1:\" ] -- $cmd" \
-    -initrd {run_dir}/initrd.cpio \
+    -initrd {app_dir}/initrd.cpio \
     -cpu max

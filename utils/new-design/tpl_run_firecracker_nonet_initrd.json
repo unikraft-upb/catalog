@@ -2,7 +2,7 @@
   "boot-source": {{
     "kernel_image_path": "{kernel}",
     "boot_args": "{name} vfs.fstab=[ \"initrd0:/:extract::ramfs=1:\" ] -- {cmd}",
-    "initrd_path": "{run_dir}/initrd.cpio"
+    "initrd_path": "{app_dir}/initrd.cpio"
   }},
   "drives": [],
   "machine-config": {{

@@ -610,6 +610,35 @@ class AppConfig:
                     if "kconfig" in data["libraries"][l].keys():
                         self.config["libraries"][l]["kconfig"] = data["libraries"][l]["kconfig"]
 
+    def generate_init(self, tester_config):
+        if self.config['test_dir']:
+            test_dir = os.path.abspath(self.user_config['test_dir'])
+        else:
+            test_dir = os.path.abspath('.tests')
+        if self.config['rootfs']:
+            rootfs = os.path.join(os.getcwd(), self.config["rootfs"])
+        else:
+            rootfs = ""
+        init_dir = os.getcwd()
+
+        base = tester_config.config["source"]["base"]
+
+        name = self.config["name"]
+
+        if self.has_template():
+            app_dir = os.path.join(os.path.join(base, "apps"), self.config['template'])
+        else:
+            app_dir = os.getcwd()
+
+        with open(os.path.join(SCRIPT_DIR, "tpl_app_fs_init.sh"), "r", encoding="utf-8") as stream:
+            raw_content = stream.read()
+
+        content = raw_content.format(**locals())
+
+        with open(os.path.join(test_dir, "app_fs_init.sh"), "w", encoding="utf-8") as stream:
+            stream.write(content)
+        os.chmod(os.path.join(test_dir, "app_fs_init.sh"), 0o755)
+
     def __init__(self, app_config="Kraftfile", user_config="config.yaml"):
         self.config = {}
         self._parse_user_config(user_config)
@@ -727,10 +756,6 @@ class BuildConfig:
         with open(os.path.join(SCRIPT_DIR, "tpl_Makefile"), "r", encoding="utf-8") as stream:
             raw_content = stream.read()
 
-        if self.app_config.has_template():
-            app_dir = os.path.join(os.path.join(self.target_config["base"], "apps"), self.app_config.config['template'])
-        else:
-            app_dir = os.getcwd()
         libs = ""
         if 'libraries' in self.app_config.config.keys():
             for l in self.app_config.config["libraries"].keys():
@@ -738,6 +763,11 @@ class BuildConfig:
             libs = libs[:-1]
         base = self.target_config["base"]
         target_dir = self.dir
+
+        if self.app_config.has_template():
+            app_dir = os.path.join(os.path.join(self.target_config["base"], "apps"), self.app_config.config['template'])
+        else:
+            app_dir = os.getcwd()
 
         content = raw_content.format(**locals())
 
@@ -892,38 +922,12 @@ class BuildConfig:
         with open(os.path.join(SCRIPT_DIR, "tpl_build_make_einitrd.sh"), "r", encoding="utf-8") as stream:
             raw_content = stream.read()
 
-        if self.app_config.has_template():
-            app_dir = os.path.join(os.path.join(self.target_config["base"], "apps"), self.app_config.config['template'])
-        else:
-            app_dir = os.getcwd()
         base = self.target_config["base"]
         target_dir = self.dir
         rootfs = os.path.join(os.getcwd(), self.app_config.config["rootfs"])
         name = self.app_config.config["name"]
         #(cross_compile, compiler) = self._get_compiler_vars()
         compiler = self.config['compiler']['path']
-        init_dir = os.getcwd()
-
-        content = raw_content.format(**locals())
-
-        with open(os.path.join(self.dir, "build"), "w", encoding="utf-8") as stream:
-            stream.write(content)
-        os.chmod(os.path.join(self.dir, "build"), 0o755)
-
-    def _generate_fs(self):
-        """Generate file system for examples for Make-based build."""
-
-        with open(os.path.join(SCRIPT_DIR, "tpl_build_fs.sh"), "r", encoding="utf-8") as stream:
-            raw_content = stream.read()
-
-        if self.app_config.has_template():
-            app_dir = os.path.join(os.path.join(self.target_config["base"], "apps"), self.app_config.config['template'])
-        else:
-            app_dir = os.getcwd()
-        base = self.target_config["base"]
-        target_dir = self.dir
-        rootfs = os.path.join(os.getcwd(), self.app_config.config["rootfs"])
-        name = self.app_config.config["name"]
         init_dir = os.getcwd()
 
         content = raw_content.format(**locals())
@@ -963,9 +967,6 @@ class BuildConfig:
                 else:
                     self._generate_build_make()
                 self._generate_run_kraftfile()
-            else:
-                if self.app_config.config["rootfs"]:
-                    self._generate_fs()
         elif self.config['build_tool'] == 'kraft':
             self._generate_kraftfile()
             self._generate_build_kraft()
@@ -1016,7 +1017,11 @@ class RunConfig:
         if self.config["networking"] == "nat" and arch == "arm64":
             name = ""
 
-        print(template_name)
+        if self.app_config.has_template():
+            app_dir = os.path.join(os.path.join(self.target_config["base"], "apps"), self.app_config.config['template'])
+        else:
+            app_dir = os.getcwd()
+
         content = raw_content.format(**locals())
 
         with open(os.path.join(self.dir, output_name), "w", encoding="utf-8") as stream:
@@ -1120,6 +1125,7 @@ def main():
 
     t = TesterConfig(sys.argv[1])
     a = AppConfig()
+    a.generate_init(t)
     s = SystemConfig()
 
     copy_common()
@@ -1127,7 +1133,6 @@ def main():
     targets = generate_target_configs(t, a, s)
     for t in targets:
         t.generate()
-
 
 if __name__ == "__main__":
     sys.exit(main())
