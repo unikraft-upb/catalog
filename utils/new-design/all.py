@@ -745,33 +745,33 @@ class AppConfig:
         return str(self.config)
 
 
-class TargetConfig:
-    """Store target configuration.
+class TargetSetup:
+    """Create setup for target.
 
-    A target is defined by a build configuration that generates a unikernel
-    image and filesystem and run configurations that run the image and filesystem.
+    A target is defined by a build setup that generates a unikernel
+    image and filesystem, and run setups that run the image and filesystem.
     """
 
     class_id = 1
 
     def __init__(self, config, app_config, system_config):
-        """Initialize target configuration.
+        """Initialize target setup.
 
-        Use the config argument to initialize. Instantiate a BuildConfig class and
-        multiple RunConfig classes.
+        Use the config argument to initialize. Instantiate a BuildSetup class and
+        multiple RunSetup classes.
 
         Consider the application configuration and the system configuration.
         """
 
         self.config = config
-        self.id = TargetConfig.class_id
-        TargetConfig.class_id += 1
+        self.id = TargetSetup.class_id
+        TargetSetup.class_id += 1
         if app_config.config['test_dir']:
             base = os.path.abspath(app_config.user_config['test_dir'])
         else:
             base = os.path.abspath('.tests')
         self.dir = os.path.join(base, "{:05d}".format(self.id))
-        self.build_config = BuildConfig(self.dir, self.config['build'], self.config, app_config)
+        self.build_config = BuildSetup(self.dir, self.config['build'], self.config, app_config)
         self.run_configs = []
         idx = 1
         for r in self.config['run']['runs']:
@@ -785,7 +785,7 @@ class TargetConfig:
                 continue
             run_dir = os.path.join(self.dir, "run-{:02d}".format(idx))
             idx += 1
-            self.run_configs.append(RunConfig(run_dir, r, self.config, self.build_config, app_config, system_config.get_arch()))
+            self.run_configs.append(RunSetup(run_dir, r, self.config, self.build_config, app_config, system_config.get_arch()))
 
     def generate(self):
         """Generate target directory.
@@ -813,16 +813,15 @@ class TargetConfig:
             r.generate()
 
 
-class BuildConfig:
-    """Store build configuration.
+class BuildSetup:
+    """Manage build setup.
 
-    A build configuration specifies the architecture, platform, build tool.
-
-    It generates required build configuration files.
+    A build setup consists of configuration files and build scripts, that specify
+    the build configuration, build tools.
     """
 
     def __init__(self, base_dir, config, target_config, app_config):
-        """Initialize build configuration.
+        """Initialize build setup.
 
         Use the config argument to populate the configuration.
         Make use of the target configuration and the application configuration.
@@ -1113,16 +1112,15 @@ class BuildConfig:
             self._generate_build_kraft()
 
 
-class RunConfig:
-    """Store run configuration.
+class RunSetup:
+    """Manage run setup.
 
-    A run configuration specifies VMM to use and network configuration.
-
-    It generates required run configuration files and scripts.
+    A run setup consists of configuration files and scripts that specify and depend on
+    VMM, network configuration and filesystem configuration.
     """
 
     def __init__(self, base_dir, config, target_config, build_config, app_config, sys_arch):
-        """Initialize run configuration.
+        """Initialize run setup.
 
         Use the config argument to populate the configuration.
         Make use of the target configuration, build configuration, application
@@ -1283,13 +1281,13 @@ def generate_target_configs(tester_config, app_config, system_config):
     for (plat, arch) in app_config.config['targets']:
         vmms = system_config.get_vmms(plat, arch)
         compilers = system_config.get_compilers(plat, arch)
-        build_tools = BuildConfig.get_build_tools(plat, arch)
-        run_tools = RunConfig.get_run_tools(plat, arch)
+        build_tools = BuildSetup.get_build_tools(plat, arch)
+        run_tools = RunSetup.get_run_tools(plat, arch)
         tester_config.generate_target_configs(plat, arch, system_config.get_arch(), vmms, compilers, build_tools, run_tools)
 
     targets = []
     for config in tester_config.get_target_configs():
-        t = TargetConfig(config, app_config, system_config)
+        t = TargetSetup(config, app_config, system_config)
         targets.append(t)
 
     return targets
