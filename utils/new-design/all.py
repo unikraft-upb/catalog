@@ -470,30 +470,104 @@ class AppConfig:
     """
 
     def has_template(self):
+        """Check if application config is a template.
+
+        A template generally means that the application is running in
+        binary-compatibility mode and using the ELF Loader.
+
+        Return true or false.
+        """
+
         return self.config['template'] != None
 
     def has_einitrd(self):
+        """Check if application is conifgured to use an embedded initial
+        ramdisk.
+
+        This is generally configured in the `Kraftfile` by an option such as
+        `CONFIG_LIBVFSCORE_AUTOMOUNT_CI_EINITRD`.
+
+        Return true or false.
+        """
+
         return self.einitrd
 
     def is_runtime(self):
+        """Check if application is a binary-compatibility runtime.
+
+        This means that the application builds a kernel image. And the kernel
+        image can then be used to run applications using binary-compatibility
+        mode.
+
+        Return true or false.
+        """
+
         return self.is_kernel()
 
     def is_kernel(self):
+        """Check if application builds into a kernel image.
+
+        The alternative is the application uses a pre-existing runtime, and
+        doesn't require the building of a kernel.
+
+        Return true or false.
+        """
+
         return self.config['unikraft'] != None
 
     def is_example(self):
+        """Check if application is an example.
+
+        An example application uses a pre-existing runtime / kernel. There is
+        no kernel build phase.
+
+        Return true or false.
+        """
+
         return not self.is_runtime()
 
     def is_bincompat(self):
+        """Check if application is a binary-compatible runtime.
+
+        If the application uses a template, that template is ELF Loader, so
+        the application is building into a binary-compatible runtime.
+
+        Return true or false.
+        """
+
         return self.has_template()
 
     def has_networking(self):
+        """Check if application has networking.
+
+        The networking option is part of the `config.yaml` file.
+
+        Return true or false.
+        """
+
         return self.config['networking']
 
     def has_rootfs(self):
+        """Check if application has a root filesystem.
+
+        The root filesystem is part of the `Kraftfile`.
+
+        Return true or false.
+        """
+
         return self.config['rootfs']
 
     def _get_targets_from_runtime(self):
+        """Get targets (as pair of plat and arch) from runtime package.
+
+        Parse the `kraft pkg` output and extract runtime targets. This is
+        useful for examples, that don't specify targets in the `Kraftfile`.
+        But they specify a runtime that specifies targets.
+
+        Populate the self.config['targets'] array as array of (plat, arch)
+        pairs.
+        """
+
         kraft_proc = subprocess.Popen(["kraft", "pkg", "info", "--log-level", "panic", self.config["runtime"], "-o", "json"], stdout=subprocess.PIPE)
         jq_proc = subprocess.Popen(["jq", "-r", ".[] | .plat"], stdin=subprocess.PIPE, stdout=subprocess.PIPE)
         kraft_output,_ = kraft_proc.communicate()
@@ -508,6 +582,11 @@ class AppConfig:
             self.config['targets'] = targets
 
     def _parse_user_config(self, user_config_file):
+        """Parse config.yaml file.
+
+        Populate corresponding entries in self.config.
+        """
+
         with open(user_config_file, "r", encoding="utf-8") as stream:
             data = yaml.safe_load(stream)
 
@@ -537,6 +616,11 @@ class AppConfig:
             self.config["public_port"] = data["public_port"]
 
     def _parse_app_config(self, app_config_file):
+        """Parse Kraftfile.
+
+        Populate corresponding entries in self.config.
+        """
+
         with open(app_config_file, "r", encoding="utf-8") as stream:
             data = yaml.safe_load(stream)
 
@@ -611,6 +695,13 @@ class AppConfig:
                         self.config["libraries"][l]["kconfig"] = data["libraries"][l]["kconfig"]
 
     def generate_init(self, tester_config):
+        """Generate filesystem initialization script.
+
+        The script (`app_fs_init.sh`) is generated in the top-level test
+        directory. It is used to initialize the filesystem before other build
+        or run steps.
+        """
+
         if self.config['test_dir']:
             test_dir = os.path.abspath(self.user_config['test_dir'])
         else:
@@ -640,6 +731,12 @@ class AppConfig:
         os.chmod(os.path.join(test_dir, "app_fs_init.sh"), 0o755)
 
     def __init__(self, app_config="Kraftfile", user_config="config.yaml"):
+        """Initialize application configuration.
+
+        Parse application config (`Kraftfile`) and user config (`config.yaml`)
+        and populate all entries in the self.config dictionary.
+        """
+
         self.config = {}
         self._parse_user_config(user_config)
         self._parse_app_config(app_config)
@@ -649,9 +746,23 @@ class AppConfig:
 
 
 class TargetConfig:
+    """Store target configuration.
+
+    A target is defined by a build configuration that generates a unikernel
+    image and filesystem and run configurations that run the image and filesystem.
+    """
+
     class_id = 1
 
     def __init__(self, config, app_config, system_config):
+        """Initialize target configuration.
+
+        Use the config argument to initialize. Instantiate a BuildConfig class and
+        multiple RunConfig classes.
+
+        Consider the application configuration and the system configuration.
+        """
+
         self.config = config
         self.id = TargetConfig.class_id
         TargetConfig.class_id += 1
@@ -677,6 +788,15 @@ class TargetConfig:
             self.run_configs.append(RunConfig(run_dir, r, self.config, self.build_config, app_config, system_config.get_arch()))
 
     def generate(self):
+        """Generate target directory.
+
+        The target directory name is an index. Its contents are:
+
+        - config.yaml: target / build configuration
+        - build configuration files (Kraftfile, Dockerfile, root filesystem, defconfig)
+        - run directories, also as indexes
+        """
+
         # Create directory.
         os.mkdir(self.dir, mode=0o755)
         # Generate config.yaml.
@@ -694,8 +814,20 @@ class TargetConfig:
 
 
 class BuildConfig:
+    """Store build configuration.
+
+    A build configuration specifies the architecture, platform, build tool.
+
+    It generates required build configuration files.
+    """
 
     def __init__(self, base_dir, config, target_config, app_config):
+        """Initialize build configuration.
+
+        Use the config argument to populate the configuration.
+        Make use of the target configuration and the application configuration.
+        """
+
         self.dir = base_dir
         self.config = config
         self.target_config = target_config
@@ -706,6 +838,8 @@ class BuildConfig:
             self.kernel_path = os.path.join(os.path.join(os.path.join(self.dir, ".unikraft"), "bin"), "kernel")
 
     def get_build_tools(plat, arch):
+        """Get the list the potential build tools."""
+
         return ["make", "kraft"]
 
     def _generate_defconfig(self):
@@ -847,7 +981,7 @@ class BuildConfig:
                             stream.write(f"      {k}: {v}\n")
 
     def _generate_run_kraftfile(self):
-        """Generate minimal Kraftfile for run Kraft-based runs in case of
+        """Generate minimal Kraftfile for Kraft-based runs in case of
         Make-based builds.
 
         The generated Kraftfile contains only minimal information:
@@ -887,9 +1021,7 @@ class BuildConfig:
                 stream.write(f"  source: {unikraft_path}\n")
 
     def _get_compiler_vars(self):
-        """Generate compiler variables, typically CROSS_COMPILE and
-        COMPILER.
-        """
+        """Generate compiler variables, typically CROSS_COMPILE and COMPILER."""
 
         if self.config['arch'] == 'x86_64':
             return ("", self.config['compiler']['path'])
@@ -958,6 +1090,15 @@ class BuildConfig:
         os.chmod(os.path.join(self.dir, "build"), 0o755)
 
     def generate(self):
+        """Generate all required build files.
+
+        Consider:
+
+        - the build tool
+        - the application type (kernel or example)
+        - the use of embedded initrd
+        """
+
         if self.config['build_tool'] == 'make':
             if self.app_config.is_kernel():
                 self._generate_defconfig()
@@ -973,8 +1114,21 @@ class BuildConfig:
 
 
 class RunConfig:
+    """Store run configuration.
+
+    A run configuration specifies VMM to use and network configuration.
+
+    It generates required run configuration files and scripts.
+    """
 
     def __init__(self, base_dir, config, target_config, build_config, app_config, sys_arch):
+        """Initialize run configuration.
+
+        Use the config argument to populate the configuration.
+        Make use of the target configuration, build configuration, application
+        configuration and system configuration.
+        """
+
         self.dir = base_dir
         self.config = config
         self.target_config = target_config
@@ -983,9 +1137,17 @@ class RunConfig:
         self.sys_arch = sys_arch
 
     def get_run_tools(plat, arch):
+        """Get the list the potential run tool types."""
+
         return ["vmm", "kraft"]
 
     def _generate_from_template(self, template_name, output_name):
+        """Generate output file from template.
+
+        A template file stores variables that are to be replaced. Such variables
+        define platform, architecture, used memory etc.
+        """
+
         with open(os.path.join(SCRIPT_DIR, template_name), "r", encoding="utf-8") as stream:
             raw_content = stream.read()
 
@@ -1028,13 +1190,19 @@ class RunConfig:
             stream.write(content)
 
     def _generate_fc_config_from_template(self, template_name):
+        """Generate Firecracker configuration files (config.json) from template."""
+
         self._generate_from_template(template_name, "config.json")
 
     def _generate_run_script_from_template(self, template_name):
+        """Generate run script from template."""
+
         self._generate_from_template(template_name, "run")
         os.chmod(os.path.join(self.dir, "run"), 0o755)
 
     def _generate_firecracker(self):
+        """Generate Firecracker run configuration file (`config.json`) and run script (`run`)."""
+
         if self.app_config.has_einitrd() or not self.app_config.has_rootfs():
             if self.config["networking"] == "none":
                 self._generate_fc_config_from_template(f"tpl_run_firecracker_nonet_noinitrd.json")
@@ -1051,6 +1219,8 @@ class RunConfig:
                 self._generate_run_script_from_template(f"tpl_run_firecracker_net_{self.config['networking']}_initrd.sh")
 
     def _generate_qemu(self):
+        """Generate QEMU run script (`run`)."""
+
         if self.app_config.has_einitrd() or not self.app_config.has_rootfs():
             if self.config["networking"] == "none":
                 self._generate_run_script_from_template(f"tpl_run_qemu_net_nat_noinitrd.sh")
@@ -1063,15 +1233,21 @@ class RunConfig:
                 self._generate_run_script_from_template(f"tpl_run_qemu_net_{self.config['networking']}_initrd.sh")
 
     def _generate_xen(self):
+        """Generate Xen configuration file (`xen.cfg`) and run script (`run`)."""
+
         pass
 
     def _generate_kraft(self):
+        """Generate Kraft run script (`run`)."""
+
         if self.config["networking"] == "none":
             self._generate_run_script_from_template(f"tpl_run_kraft_nonet.sh")
         else:
             self._generate_run_script_from_template(f"tpl_run_kraft_net_{self.config['networking']}.sh")
 
     def generate(self):
+        """Generate run configuration file and scripts according to run tool (and VMM)."""
+
         if self.config['run_tool'] == 'vmm':
             if self.target_config['build']['platform'] == 'fc':
                 self._generate_firecracker()
@@ -1082,18 +1258,28 @@ class RunConfig:
         elif self.config['run_tool'] == 'kraft':
             self._generate_kraft()
 
-class TestRunner:
-    pass
-
-
 
 def copy_common():
+    """Copy all common scripts to the test directory.
+
+    These scripts are to be used in the build, run and test phases.
+    """
+
     base = os.path.abspath('.tests')
     dest = os.path.join(base, "common")
     src = os.path.join(SCRIPT_DIR, "common")
     distutils.dir_util.copy_tree(src, dest, update=1)
 
+
 def generate_target_configs(tester_config, app_config, system_config):
+    """Generate all possible target configurations for given application on given system.
+
+    A target configuration will generate the corresponding build configuration and
+    run configurations.
+
+    Return list of all target configurations in `targets` variable.
+    """
+
     for (plat, arch) in app_config.config['targets']:
         vmms = system_config.get_vmms(plat, arch)
         compilers = system_config.get_compilers(plat, arch)
@@ -1105,7 +1291,9 @@ def generate_target_configs(tester_config, app_config, system_config):
     for config in tester_config.get_target_configs():
         t = TargetConfig(config, app_config, system_config)
         targets.append(t)
+
     return targets
+
 
 SCRIPT_DIR = os.path.dirname(os.path.realpath(__file__))
 
