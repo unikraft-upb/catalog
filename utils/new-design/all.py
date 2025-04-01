@@ -7,7 +7,7 @@ import re
 import shutil
 import sys
 import string
-import distutils
+import shutil
 
 SCRIPT_DIR = "."
 
@@ -635,6 +635,8 @@ class AppConfig:
 
         content = raw_content.format(**locals())
 
+        os.makedirs(test_dir, exist_ok=True)
+
         with open(os.path.join(test_dir, "app_fs_init.sh"), "w", encoding="utf-8") as stream:
             stream.write(content)
         os.chmod(os.path.join(test_dir, "app_fs_init.sh"), 0o755)
@@ -1091,7 +1093,17 @@ def copy_common():
     base = os.path.abspath('.tests')
     dest = os.path.join(base, "common")
     src = os.path.join(SCRIPT_DIR, "common")
-    distutils.dir_util.copy_tree(src, dest, update=1)
+    os.makedirs(dest, exist_ok=True)
+    
+    for item in os.listdir(src):
+        src_path = os.path.join(src, item) 
+        dest_path = os.path.join(dest, item)
+
+        if os.path.isdir(src_path):  
+            shutil.copytree(src_path, dest_path, dirs_exist_ok=True)
+        else:
+            if not os.path.exists(dest_path) or os.stat(src_path).st_mtime > os.stat(dest_path).st_mtime:
+                shutil.copy2(src_path, dest_path)
 
 def generate_target_configs(tester_config, app_config, system_config):
     for (plat, arch) in app_config.config['targets']:
