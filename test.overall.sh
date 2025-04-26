@@ -6,6 +6,9 @@ git reset --hard HEAD
 # Set up.
 ./setup.sh
 
+# Create repos/ link in each application directory.
+./create-repos.sh
+
 # Update Kraftfiles.
 ./update-kraftfiles.sh
 
