@@ -19,6 +19,7 @@ app_version=${full_name#*/}
 if test -z "$app_version" -o "$app_version" = ""; then
     app_version="latest"
 fi
+echo -n "pack.$appdir ... "
 kraft pkg --name "local-$app_name:$app_version" --plat qemu --arch x86_64 . > pack.log 2>&1
 kraft pkg --name "local-$app_name:latest" --plat qemu --arch x86_64 . >> pack.log 2>&1
 if test $? -eq 0; then
