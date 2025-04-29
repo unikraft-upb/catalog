@@ -43,6 +43,6 @@ replace_name "unikraft" "unikraft" "  "
 replace_name "template" "apps/elfloader" "  "
 
 # Update library repository configuration.
-for n in "lwip" "libelf" "musl" "nginx" "compiler-rt" "redis" "ruby" "lua" "libcxx" "libcxxabi" "libunwind" "libgcc" "sqlite" "ruby" "python3" "libuuid" "zlib"; do
+for n in "lwip" "libelf" "musl" "nginx" "compiler-rt" "redis" "ruby" "lua" "libcxx" "libcxxabi" "libunwind" "libgcc" "sqlite" "python3" "libuuid" "zlib"; do
     replace_name "$n" "libs/$n" "    "
 done
