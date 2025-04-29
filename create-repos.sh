@@ -6,7 +6,7 @@ if test ! -e "repos"; then
     exit 1
 fi
 
-for k in $(find -name Kraftfile -type f); do
+for k in $(find library/ native/ examples/ tests/ -name Kraftfile -type f); do
     d=$(dirname "$k")
     p=$(pwd)
     cd "$d"
