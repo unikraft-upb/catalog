@@ -18,7 +18,7 @@ done
 for k in $(find native/ -name Kraftfile -type f); do
     d=$(dirname "$k")
     # Do not run Rust. It requires another build type.
-    echo "$d" | grep "-rs$" > /dev/null
+    echo "$d" | grep "-rs\$" > /dev/null
     if test $? -eq 0; then
         continue
     fi
