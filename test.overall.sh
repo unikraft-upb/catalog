@@ -9,8 +9,8 @@ git reset --hard HEAD
 # Create repos/ link in each application directory.
 ./create-repos.sh
 
-# Update Kraftfiles.
-./update-kraftfiles.sh
+# Create test Kraftfiles.
+./create-test-kraftfiles.sh
 
 # Build runtimes.
 ./build-apps.sh

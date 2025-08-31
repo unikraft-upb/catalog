@@ -12,9 +12,11 @@ if ! test -d "$appdir"; then
     exit 1
 fi
 
+# Clean up potential .unikraft/ directory in elfloader.
+rm -fr repos/apps/elfloader/.unikraft/
 cd "$appdir"
 echo -n "build.$appdir ... "
-rm -fr .config* .unikraft; kraft build --log-level debug --log-type basic --no-cache --no-update --plat qemu --arch x86_64 . > build.log 2>&1
+rm -fr .config* .unikraft; kraft build --kraftfile Kraftfile.test --log-level debug --log-type basic --no-cache --no-update --plat qemu --arch x86_64 . > build.log 2>&1
 if test $? -eq 0; then
     echo "PASSED"
 else

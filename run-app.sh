@@ -18,9 +18,9 @@ echo -n "run.$appdir ... "
 . ./run.config
 test -z "$ports"
 if test $? -eq 0; then
-    kraft run --log-level debug --log-type basic --rm --plat qemu --arch x86_64 -M "$memory" . > run.log 2>&1 &
+    kraft run --log-level debug --log-type basic --kraftfile Kraftfile.test --rm --plat qemu --arch x86_64 -M "$memory" . > run.log 2>&1 &
 else
-    kraft run --log-level debug --log-type basic --rm --plat qemu --arch x86_64 -M "$memory" -p "$ports" . > run.log 2>&1 &
+    kraft run --log-level debug --log-type basic --kraftfile Kraftfile.test --rm --plat qemu --arch x86_64 -M "$memory" -p "$ports" . > run.log 2>&1 &
 fi
 sleep 45
 
