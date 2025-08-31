@@ -1,6 +1,6 @@
 #!/bin/sh
 
-curl localhost:3000/feed | grep -i blog
+curl localhost:8080 | grep 'Bye, World!'
 if test $? -ne 0; then
     echo "Message not found"
     exit 1

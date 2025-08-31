@@ -1,6 +1,6 @@
 #!/bin/sh
 
-curl localhost:8080 | grep 'Bye, World!'
+echo "set a 1" | redis-cli | grep "OK"
 if test $? -ne 0; then
     echo "Message not found"
     exit 1
